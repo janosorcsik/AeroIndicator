@@ -1,3 +1,10 @@
+# Install
+
+```sh
+brew tap rien7/apps
+brew install --cask aeroindicator
+```
+
 # Usage
 
 Add to your `.aerospace.toml`
