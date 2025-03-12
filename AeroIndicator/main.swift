@@ -25,7 +25,7 @@ func stopApplication() {
 }
 
 if CommandLine.arguments.count > 1 {
-    let cmd = CommandLine.arguments[0]
+    let cmd = CommandLine.arguments[1]
 
     if cmd == "--start-service" {
         if isAppAlreadyRunning() {
