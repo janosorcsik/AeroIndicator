@@ -14,13 +14,13 @@ func startApplication() {
 
 if CommandLine.arguments.count > 1 {
     let message = CommandLine.arguments[1...].joined(separator: " ")
-
     if isAppAlreadyRunning() {
         let client = Socket(isClient: true)
         client.send(message: message)
         exit(0)
     } else {
-        startApplication()
+        print("Error: Application is not running. Run application first.")
+        exit(1)
     }
 } else {
     if isAppAlreadyRunning() {
