@@ -18,6 +18,7 @@ func startApplication() {
 }
 
 func stopApplication() {
+    try? FileManager.default.removeItem(atPath: "/tmp/AeroIndicator")
     if let bundleID = Bundle.main.bundleIdentifier {
         let runningApps = NSRunningApplication.runningApplications(
             withBundleIdentifier: bundleID)
@@ -25,8 +26,11 @@ func stopApplication() {
         for app in runningApps where app.processIdentifier != getpid() {
             app.terminate()
         }
+
+        for app in runningApps where app.processIdentifier == getpid() {
+            app.terminate()
+        }
     }
-    try? FileManager.default.removeItem(atPath: "/tmp/AeroIndicator")
 }
 
 if CommandLine.arguments.count > 1 {
@@ -41,6 +45,7 @@ if CommandLine.arguments.count > 1 {
         }
     } else if cmd == "--stop-service" {
         stopApplication()
+        exit(0)
     } else if cmd == "--restart-service" {
         stopApplication()
         startApplication()
