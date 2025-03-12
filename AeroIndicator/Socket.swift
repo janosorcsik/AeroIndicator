@@ -6,13 +6,13 @@ class Socket {
     private var running = true
     private var messageHandler: ((String) -> Void)?
     private var isClient = false
-    
+
     init(isClient: Bool = false, messageHandler: ((String) -> Void)? = nil) {
         self.isClient = isClient
         self.messageHandler = messageHandler
         setupSocket()
     }
-    
+
     private func setupSocket() {
         if !isClient {
             try? FileManager.default.removeItem(atPath: socketPath)
@@ -22,49 +22,60 @@ class Socket {
             close(fd)
             fatalError("Error creating socket: \(String(cString: strerror(errno)))")
         }
-        
+
         var address = sockaddr_un()
         address.sun_family = sa_family_t(AF_UNIX)
         strcpy(&address.sun_path.0, socketPath)
-    
+
         let addrSize = socklen_t(
             MemoryLayout<sockaddr_un>.size(ofValue: address)
         )
-        let bindResult = withUnsafePointer(to: &address) {
-            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
-                if isClient {
+
+        if isClient {
+            let connectResult = withUnsafePointer(to: &address) {
+                $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
                     Darwin.connect(fd, $0, addrSize)
-                } else {
+                }
+            }
+
+            if connectResult != 0 {
+                print("Connect failed: \(String(cString: strerror(errno)))")
+                close(fd)
+                exit(1)
+            }
+        } else {
+            try? FileManager.default.removeItem(atPath: socketPath)
+
+            let bindResult = withUnsafePointer(to: &address) {
+                $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
                     bind(fd, $0, addrSize)
                 }
             }
-        }
-        
-        guard bindResult == 0 else {
-            close(fd)
-            fatalError("Bind failed: \(String(cString: strerror(errno)))")
-        }
-        
-        if !isClient {
+
+            guard bindResult == 0 else {
+                close(fd)
+                fatalError("Bind failed: \(String(cString: strerror(errno)))")
+            }
+
             guard listen(fd, 5) != -1 else {
                 close(fd)
                 fatalError("Listen failed: \(String(cString: strerror(errno)))")
             }
         }
     }
-    
+
     func send(message: String) {
         let messageData = message.data(using: .utf8)!
-        
+
         let _ = messageData.withUnsafeBytes {
             write(self.fd, $0.baseAddress, messageData.count)
         }
     }
-    
+
     func startListening() {
         DispatchQueue.global(qos: .background).async { [weak self] in
             guard let self = self else { return }
-            
+
             while self.running {
                 let clientSocket = accept(self.fd, nil, nil)
                 if clientSocket == -1 {
@@ -80,7 +91,7 @@ class Socket {
             self.cleanup()
         }
     }
-    
+
     private func handleClient(clientSocket: Int32) {
         var buffer = [UInt8](repeating: 0, count: 1024)
         let bytesRead = read(clientSocket, &buffer, buffer.count)
@@ -94,12 +105,12 @@ class Socket {
         }
         close(clientSocket)
     }
-    
+
     func stop() {
         running = false
         cleanup()
     }
-    
+
     private func cleanup() {
         if fd != -1 {
             close(fd)
@@ -109,7 +120,7 @@ class Socket {
             try? FileManager.default.removeItem(atPath: socketPath)
         }
     }
-    
+
     deinit {
         stop()
     }

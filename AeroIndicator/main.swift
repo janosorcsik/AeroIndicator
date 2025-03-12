@@ -1,28 +1,32 @@
 import Cocoa
 import Foundation
 
-func isAppRunning() -> Bool {
-    return FileManager.default.fileExists(atPath: "/tmp/AeroIndicator")
+func isAppAlreadyRunning() -> Bool {
+    let fileManager = FileManager.default
+    return fileManager.fileExists(atPath: "/tmp/AeroIndicator")
 }
-func runApp() {
+
+func startApplication() {
     let delegate = AppDelegate()
     NSApplication.shared.delegate = delegate
     _ = NSApplicationMain(CommandLine.argc, CommandLine.unsafeArgv)
 }
 
-let appIsRunning = isAppRunning()
-let args = CommandLine.arguments
+if CommandLine.arguments.count > 1 {
+    let message = CommandLine.arguments[1...].joined(separator: " ")
 
-if args.count == 1 && appIsRunning {
-    print("Error: Another instance of AeroIndicator is already running.")
-    exit(1)
-} else {
-    if !appIsRunning {
-        runApp()
-    }
-    if args.count > 1 {
+    if isAppAlreadyRunning() {
         let client = Socket(isClient: true)
-        client.send(message: CommandLine.arguments[1...].joined(separator: " "))
+        client.send(message: message)
         exit(0)
+    } else {
+        startApplication()
+    }
+} else {
+    if isAppAlreadyRunning() {
+        print("Error: Application is already running. Please provide command arguments.")
+        exit(1)
+    } else {
+        startApplication()
     }
 }
