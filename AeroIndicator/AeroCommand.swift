@@ -2,7 +2,8 @@ import Foundation
 
 private let getAllWorkspaceCommand = "aerospace list-workspaces --all"
 private let getFocusWorkspaceCommand = "aerospace list-workspaces --focused"
-private let getAllAppsCommand = "aerospace list-windows --all --format \"%{workspace}|||%{app-bundle-id}|||%{app-name}\""
+private let getAllAppsCommand =
+    "aerospace list-windows --all --format \"%{workspace}|||%{app-bundle-id}|||%{app-name}\""
 
 private func runShellCommand(_ command: String, arguments: [String] = []) -> String {
     let process = Process()
