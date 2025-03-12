@@ -20,7 +20,6 @@ func runApplication() {
 }
 
 func stopApplication() {
-    try? FileManager.default.removeItem(atPath: "/tmp/AeroIndicator")
     if let bundleID = Bundle.main.bundleIdentifier {
         let runningApps = NSRunningApplication.runningApplications(
             withBundleIdentifier: bundleID)
@@ -33,6 +32,7 @@ func stopApplication() {
             app.terminate()
         }
     }
+    try? FileManager.default.removeItem(atPath: "/tmp/AeroIndicator")
 }
 
 if CommandLine.arguments.count > 1 {
