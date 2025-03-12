@@ -7,9 +7,14 @@ func isAppAlreadyRunning() -> Bool {
 }
 
 func startApplication() {
-    let delegate = AppDelegate()
-    NSApplication.shared.delegate = delegate
-    _ = NSApplicationMain(CommandLine.argc, CommandLine.unsafeArgv)
+    DispatchQueue.global().async {
+        let delegate = AppDelegate()
+        NSApplication.shared.delegate = delegate
+        _ = NSApplicationMain(CommandLine.argc, CommandLine.unsafeArgv)
+    }
+
+    sleep(1)
+    exit(0)
 }
 
 func stopApplication() {
