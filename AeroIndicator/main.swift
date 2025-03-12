@@ -7,14 +7,16 @@ func isAppAlreadyRunning() -> Bool {
 }
 
 func startApplication() {
-    DispatchQueue.global().async {
-        let delegate = AppDelegate()
-        NSApplication.shared.delegate = delegate
-        _ = NSApplicationMain(CommandLine.argc, CommandLine.unsafeArgv)
-    }
+    let process = Process()
+    process.executableURL = URL(fileURLWithPath: Bundle.main.executablePath!)
+    process.arguments = ["--run-app"]
+    try? process.run()
+}
 
-    sleep(1)
-    exit(0)
+func runApplication() {
+    let delegate = AppDelegate()
+    NSApplication.shared.delegate = delegate
+    _ = NSApplicationMain(CommandLine.argc, CommandLine.unsafeArgv)
 }
 
 func stopApplication() {
@@ -49,6 +51,8 @@ if CommandLine.arguments.count > 1 {
     } else if cmd == "--restart-service" {
         stopApplication()
         startApplication()
+    } else if cmd == "--run-app" {
+        runApplication()
     } else if cmd == "--help" || cmd == "-h" {
         print("Usage: AeroIndicator [COMMAND]")
         print("Commands:")

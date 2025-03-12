@@ -2,3 +2,4 @@
 xcuserdata/
 **/CommandLine/aeroIndicator
 .zed/
+buildServer.json
