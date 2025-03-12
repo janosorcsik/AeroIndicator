@@ -25,12 +25,14 @@ func stopApplication() {
             withBundleIdentifier: bundleID)
 
         for app in runningApps where app.processIdentifier != getpid() {
-            app.terminate()
+            app.forceTerminate()
         }
 
-        for app in runningApps where app.processIdentifier == getpid() {
-            app.terminate()
-        }
+        let task = Process()
+        task.launchPath = "/usr/bin/pkill"
+        task.arguments = ["-f", "aeroIndicator"]
+        try? task.run()
+        task.waitUntilExit()
     }
     try? FileManager.default.removeItem(atPath: "/tmp/AeroIndicator")
 }
