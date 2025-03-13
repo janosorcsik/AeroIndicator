@@ -1,11 +1,13 @@
-# Install
+# AeroIndicator
+
+## Install
 
 ```sh
 brew tap rien7/apps
 brew install --cask aeroindicator
 ```
 
-# Usage
+## Usage
 
 Add to your `.aerospace.toml`
 
@@ -20,3 +22,14 @@ after-startup-command = ["exec-and-forget /usr/local/bin/aeroIndicator --restart
 exec-on-workspace-change = ['/bin/bash', '-c', '/usr/local/bin/aeroIndicator workspace-change $AEROSPACE_FOCUSED_WORKSPACE']
 on-focus-changed = ['exec-and-forget /usr/local/bin/aeroIndicator focus-change']
 ```
+
+## Commands
+
+- `--start-service`: Start the AeroIndicator service
+- `--stop-service`: Stop the AeroIndicator service
+- `--restart-service`: Restart the AeroIndicator service
+- `--help, -h`: Show this help message
+- `workspace-change WORKSPACE`: Change to specified workspace
+- `focus-change`: Refresh application list
+
+Use `rm /tmp/AeroIndicator` when there are no running instances of the app, but when executing `--start-service` it shows that the program is already running.
