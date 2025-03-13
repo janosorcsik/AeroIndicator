@@ -27,10 +27,12 @@ func stopApplication() {
         for app in runningApps where app.processIdentifier != getpid() {
             app.forceTerminate()
         }
-
+    }
+    let processNames = ["aeroIndicator", "AeroIndicator", "AeroIndicator.app"]
+    for name in processNames {
         let task = Process()
         task.launchPath = "/usr/bin/pkill"
-        task.arguments = ["-f", "aeroIndicator"]
+        task.arguments = ["-f", name]
         try? task.run()
         task.waitUntilExit()
     }
