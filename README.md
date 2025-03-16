@@ -33,3 +33,15 @@ on-focus-changed = ['exec-and-forget /usr/local/bin/aeroIndicator focus-change']
 - `focus-change`: Refresh application list
 
 Use `rm /tmp/AeroIndicator` when there are no running instances of the app, but when executing `--start-service` it shows that the program is already running.
+
+## Config
+
+add `config.toml` in `~/.config/aeroIndicator`.
+
+```toml
+# ~/.config/aeroIndicator/config.toml
+position = "bottom-left" # available value: bottom-left, bottom-center, bottom-right, top-left, top-center, top-right, center
+outerPadding = 20
+innerPadding = 12
+borderRadius = 12
+```

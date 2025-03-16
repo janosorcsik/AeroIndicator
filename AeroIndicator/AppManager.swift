@@ -8,6 +8,7 @@ class AppManager: ObservableObject {
     @Published var workspaces: [String] = []
     @Published var focusWorkspace: String = ""
     @Published var allApps: [AppDataType] = []
+    @Published var config: AeroConfig = readConfig()
 
     var isUpdatingApps = false
 
@@ -31,7 +32,14 @@ class AppManager: ObservableObject {
     }
 
     private func createWindow() {
-        let contentRect = NSRect(x: 20, y: 20, width: 1200, height: 40)
+        guard let screenFrame = NSScreen.main?.frame else { return }
+        let statusBarHeight = NSStatusBar.system.thickness
+        let contentRect = NSRect(
+            x: 0,
+            y: 0,
+            width: screenFrame.size.width,
+            height: screenFrame.size.height - statusBarHeight
+        )
 
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
@@ -42,7 +50,7 @@ class AppManager: ObservableObject {
             self.window?.orderOut(nil)
         }
     }
-    
+
     private func startListeningCommand() {
         server = Socket(isClient: false) { message in
             let splitMessages = message.split(separator: " ").map({ String($0) })
@@ -57,7 +65,7 @@ class AppManager: ObservableObject {
         }
         server?.startListening()
     }
-    
+
     private func getAllWorkspaceApps() {
         if self.isUpdatingApps { return }
         Task {
@@ -69,7 +77,7 @@ class AppManager: ObservableObject {
             }
         }
     }
-    
+
     private func startListeningKey() {
         func handleEvent(_ event: NSEvent) {
             if event.modifierFlags.contains(.option) {
