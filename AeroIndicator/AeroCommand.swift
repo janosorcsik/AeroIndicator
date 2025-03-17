@@ -37,7 +37,7 @@ func getAllApps() -> [AppDataType] {
     var apps: [AppDataType] = []
     let result = runShellCommand(getAllAppsCommand)
     for appString in result.split(separator: "\n") {
-        let appData = appString.split(separator: "|||").map({ String($0) })
+        let appData = appString.components(separatedBy: "|||")
         guard appData.count == 3 else { continue }
         apps.append(
             AppDataType(

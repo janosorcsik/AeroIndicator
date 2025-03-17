@@ -56,10 +56,16 @@ struct AeroIndicatorWorkspace: View {
             if workspace == model.focusWorkspace || !apps.isEmpty {
                 HStack {
                     Text(workspace)
-                        .monospaced()
-                        .foregroundStyle(
-                            model.focusWorkspace == workspace ? Color.red : Color.primary
+                        .font(
+                            Font(
+                                NSFont
+                                    .monospacedSystemFont(
+                                        ofSize: NSFont.systemFontSize,
+                                        weight: .regular
+                                    )
+                            )
                         )
+                        .foregroundColor(model.focusWorkspace == workspace ? Color.red : Color.primary)
                     ForEach(apps, id: \.bundleId) { app in
                         AeroIndicatorWorkspaceApp(app: app)
                     }
@@ -67,8 +73,11 @@ struct AeroIndicatorWorkspace: View {
                 .padding(.horizontal, 4)
             }
         }
-        .onChange(of: model.allApps, initial: true) { _, newValue in
+        .onChange(of: model.allApps) { newValue in
             self.apps = newValue.filter({ $0.workspaceId == workspace })
+        }
+        .onAppear {
+            self.apps = model.allApps.filter({ $0.workspaceId == workspace })
         }
     }
 }
