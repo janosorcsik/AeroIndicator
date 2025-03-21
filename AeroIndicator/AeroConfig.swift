@@ -20,7 +20,9 @@ let defaultConfig = AeroConfig(
     position: "bottom-left",
     outerPadding: 20,
     innerPadding: 12,
-    borderRadius: 12
+    borderRadius: 12,
+    fontSize: nil,
+    iconSize: 16
 )
 
 func readConfig() -> AeroConfig {
@@ -29,15 +31,20 @@ func readConfig() -> AeroConfig {
 
     let source = config?.string("source") ?? defaultConfig.source
     let position = config?.string("position") ?? defaultConfig.position
-    let outerPadding = config?.double("outer-padding") ?? defaultConfig.outerPadding
-    let innerPadding = config?.double("inner-padding") ?? defaultConfig.innerPadding
-    let borderRadius = config?.double("border-radius") ?? defaultConfig.borderRadius
+    let outerPadding = config?.doubleInt("outer-padding") ?? defaultConfig.outerPadding
+    let innerPadding = config?.doubleInt("inner-padding") ?? defaultConfig.innerPadding
+    let borderRadius = config?.doubleInt("border-radius") ?? defaultConfig.borderRadius
+    let fontSize = config?.doubleInt("font-size") ?? defaultConfig.fontSize
+    let iconSize = config?.doubleInt("icon-size") ?? defaultConfig.iconSize
+
     return AeroConfig(
         source: source,
         position: position,
         outerPadding: outerPadding,
         innerPadding: innerPadding,
-        borderRadius: borderRadius
+        borderRadius: borderRadius,
+        fontSize: fontSize,
+        iconSize: iconSize
     )
 }
 
@@ -47,4 +54,18 @@ struct AeroConfig {
     var outerPadding: Double
     var innerPadding: Double
     var borderRadius: Double
+    var fontSize: Double?
+    var iconSize: Double
+}
+
+extension Toml {
+    func doubleInt(_ key: String) -> Double? {
+        if let doubleResult = self.double(key) {
+            return doubleResult
+        }
+        if let intResult = self.int(key) {
+            return Double(intResult)
+        }
+        return nil
+    }
 }

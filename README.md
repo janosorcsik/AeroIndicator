@@ -58,7 +58,9 @@ add `config.toml` in `~/.config/aeroIndicator`.
 # ~/.config/aeroIndicator/config.toml
 source = "aerospace" # available value: aerospace, yabai
 position = "bottom-left" # available value: bottom-left, bottom-center, bottom-right, top-left, top-center, top-right, center
-outerPadding = 20
-innerPadding = 12
-borderRadius = 12
+outer-padding = 20
+inner-padding = 12
+border-padius = 12
+# font-size = 14 # emit this field to use system default size
+icon-size = 16
 ```

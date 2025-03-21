@@ -64,7 +64,7 @@ struct AeroIndicatorWorkspace: View {
                             Font(
                                 NSFont
                                     .monospacedSystemFont(
-                                        ofSize: NSFont.systemFontSize,
+                                        ofSize: model.config.fontSize ?? NSFont.systemFontSize,
                                         weight: .regular
                                     )
                             )
@@ -72,7 +72,7 @@ struct AeroIndicatorWorkspace: View {
                         .foregroundColor(
                             model.focusWorkspace == workspace ? Color.red : Color.primary)
                     ForEach(apps, id: \.bundleId) { app in
-                        AeroIndicatorWorkspaceApp(app: app)
+                        AeroIndicatorWorkspaceApp(app: app, model: model)
                     }
                 }
                 .padding(.horizontal, 4)
@@ -89,12 +89,14 @@ struct AeroIndicatorWorkspace: View {
 
 struct AeroIndicatorWorkspaceApp: View {
     var app: AppDataType
+    @ObservedObject var model: AppManager
+
     var body: some View {
         if let image = AppIcon.shared.get(app.bundleId) {
             Image(nsImage: image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 16, height: 16)
+                .frame(width: model.config.iconSize, height: model.config.iconSize)
         }
     }
 }

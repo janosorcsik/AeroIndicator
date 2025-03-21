@@ -66,7 +66,6 @@ func getAllWorkspaces(source: String) -> [String] {
         do {
             let decoder = JSONDecoder()
             let json = try decoder.decode([YabaiWorkspace].self, from: jsonData)
-            print(json)
             return json.map({ String($0.index) }
             )
         } catch {
@@ -121,7 +120,6 @@ func getAllApps(source: String) -> [AppDataType] {
         do {
             let decoder = JSONDecoder()
             let json = try decoder.decode([YabaiApp].self, from: jsonData)
-            print(json)
             return json.filter({ $0.pid != ProcessInfo.processInfo.processIdentifier }).map({
                 AppDataType(
                     workspaceId: String($0.space),
