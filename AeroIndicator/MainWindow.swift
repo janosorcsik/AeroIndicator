@@ -23,8 +23,9 @@ class MainWindow<Content: View>: NSPanel {
         backgroundColor = .clear
         hasShadow = true
 
+        collectionBehavior = .canJoinAllSpaces
         /// Sets animations accordingly
-        animationBehavior = .utilityWindow
+        animationBehavior = .default
 
         /// Set the content view.
         contentView = NSHostingView(rootView: view())

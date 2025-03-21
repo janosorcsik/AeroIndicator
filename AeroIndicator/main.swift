@@ -66,6 +66,7 @@ if CommandLine.arguments.count > 1 {
         print("  --help, -h                  Show this help message")
         print("  workspace-change WORKSPACE  Change to specified workspace")
         print("  focus-change                Refresh application list")
+        print("  workspace-create-or-delete  Create or delete workspace")
         exit(0)
     } else if isAppAlreadyRunning() {
         let message = CommandLine.arguments[1...].joined(separator: " ")

@@ -16,6 +16,7 @@ func readConfigFile() -> String? {
 }
 
 let defaultConfig = AeroConfig(
+    source: "aerospace",
     position: "bottom-left",
     outerPadding: 20,
     innerPadding: 12,
@@ -26,11 +27,13 @@ func readConfig() -> AeroConfig {
     guard let configString = readConfigFile() else { return defaultConfig }
     let config = try? Toml(withString: configString)
 
+    let source = config?.string("source") ?? defaultConfig.source
     let position = config?.string("position") ?? defaultConfig.position
     let outerPadding = config?.double("outer-padding") ?? defaultConfig.outerPadding
     let innerPadding = config?.double("inner-padding") ?? defaultConfig.innerPadding
     let borderRadius = config?.double("border-radius") ?? defaultConfig.borderRadius
     return AeroConfig(
+        source: source,
         position: position,
         outerPadding: outerPadding,
         innerPadding: innerPadding,
@@ -39,6 +42,7 @@ func readConfig() -> AeroConfig {
 }
 
 struct AeroConfig {
+    var source: String
     var position: String
     var outerPadding: Double
     var innerPadding: Double

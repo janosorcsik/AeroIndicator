@@ -9,6 +9,8 @@ brew install --cask aeroindicator
 
 ## Usage
 
+### Aerospace
+
 Add to your `.aerospace.toml`
 
 ```toml
@@ -23,6 +25,17 @@ exec-on-workspace-change = ['/bin/bash', '-c', '/usr/local/bin/aeroIndicator wor
 on-focus-changed = ['exec-and-forget /usr/local/bin/aeroIndicator focus-change']
 ```
 
+### Yabai
+
+Add to your `.yabairc`
+
+```shell
+yabai -m signal --add event=window_focused action='aeroIndicator focus-change'
+yabai -m signal --add event=space_changed action='aeroIndicator workspace-change $YABAI_SPACE_INDEX'
+yabai -m signal --add event=space_created action='aeroIndicator workspace-createed-or-destroyed'
+yabai -m signal --add event=space_destroyed action='aeroIndicator workspace-createed-or-destroyed'
+```
+
 ## Commands
 
 - `--start-service`: Start the AeroIndicator service
@@ -31,6 +44,7 @@ on-focus-changed = ['exec-and-forget /usr/local/bin/aeroIndicator focus-change']
 - `--help, -h`: Show this help message
 - `workspace-change WORKSPACE`: Change to specified workspace
 - `focus-change`: Refresh application list
+- `workspace-created-or-destroyed`: Get all workspace
 
 Use `rm /tmp/AeroIndicator` when there are no running instances of the app, but when executing `--start-service` it shows that the program is already running.
 
@@ -38,8 +52,11 @@ Use `rm /tmp/AeroIndicator` when there are no running instances of the app, but 
 
 add `config.toml` in `~/.config/aeroIndicator`.
 
+### Default Config
+
 ```toml
 # ~/.config/aeroIndicator/config.toml
+source = "aerospace" # available value: aerospace, yabai
 position = "bottom-left" # available value: bottom-left, bottom-center, bottom-right, top-left, top-center, top-right, center
 outerPadding = 20
 innerPadding = 12

@@ -4,45 +4,49 @@ struct AeroIndicatorApp: View {
     @ObservedObject var model: AppManager
 
     var body: some View {
-        VStack(spacing: 0) {
-            if ["bottom-left", "bottom-center", "bottom-right", "center"]
-                .contains(model.config.position)
-            {
-                Spacer()
-            }
-            HStack(spacing: 0) {
-                if ["bottom-right", "bottom-center", "top-right", "top-center", "center"]
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                if ["bottom-left", "bottom-center", "bottom-right", "center"]
                     .contains(model.config.position)
                 {
                     Spacer()
                 }
                 HStack(spacing: 0) {
-                    if !model.workspaces.isEmpty {
-                        ForEach(model.workspaces, id: \.self) { workspace in
-                            AeroIndicatorWorkspace(
-                                workspace: workspace,
-                                model: model
-                            )
+                    if ["bottom-right", "bottom-center", "top-right", "top-center", "center"]
+                        .contains(model.config.position)
+                    {
+                        Spacer()
+                    }
+                    HStack(spacing: 0) {
+                        if !model.workspaces.isEmpty {
+                            ForEach(model.workspaces, id: \.self) { workspace in
+                                AeroIndicatorWorkspace(
+                                    workspace: workspace,
+                                    model: model
+                                )
+                            }
                         }
                     }
+                    .padding(model.config.innerPadding)
+                    .visualEffect(material: .popover, blendingMode: .behindWindow)
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: model.config.borderRadius)
+                    )
+                    if ["bottom-left", "bottom-center", "top-left", "top-center", "center"]
+                        .contains(model.config.position)
+                    {
+                        Spacer()
+                    }
                 }
-                .padding(model.config.innerPadding)
-                .visualEffect(material: .popover, blendingMode: .behindWindow)
-                .clipShape(
-                    RoundedRectangle(cornerRadius: model.config.borderRadius)
-                )
-                if ["bottom-left", "bottom-center", "top-left", "top-center", "center"]
-                    .contains(model.config.position)
+                .padding(.horizontal, model.config.outerPadding)
+                if ["top-left", "top-center", "top-right", "center"].contains(model.config.position)
                 {
                     Spacer()
                 }
             }
-            .padding(.horizontal, model.config.outerPadding)
-            if ["top-left", "top-center", "top-right", "center"].contains(model.config.position) {
-                Spacer()
-            }
+            .padding(.vertical, model.config.outerPadding)
+            .frame(maxWidth: geometry.size.width, maxHeight: geometry.size.height)
         }
-        .padding(.vertical, model.config.outerPadding)
     }
 }
 
@@ -65,7 +69,8 @@ struct AeroIndicatorWorkspace: View {
                                     )
                             )
                         )
-                        .foregroundColor(model.focusWorkspace == workspace ? Color.red : Color.primary)
+                        .foregroundColor(
+                            model.focusWorkspace == workspace ? Color.red : Color.primary)
                     ForEach(apps, id: \.bundleId) { app in
                         AeroIndicatorWorkspaceApp(app: app)
                     }
