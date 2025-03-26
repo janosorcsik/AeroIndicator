@@ -33,6 +33,15 @@ struct YabaiApp: Codable {
     let pid: Int32
     let app: String
     let space: Int
+    
+    let hasAxReference: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case pid
+        case app
+        case space
+        case hasAxReference = "has-ax-reference"
+    }
 }
 
 private func runShellCommand(_ command: String, arguments: [String] = []) -> String {
@@ -120,7 +129,9 @@ func getAllApps(source: String) -> [AppDataType] {
         do {
             let decoder = JSONDecoder()
             let json = try decoder.decode([YabaiApp].self, from: jsonData)
-            return json.filter({ $0.pid != ProcessInfo.processInfo.processIdentifier }).map({
+            return json
+                .filter({ $0.pid != ProcessInfo.processInfo.processIdentifier && $0.hasAxReference })
+                .map({
                 AppDataType(
                     workspaceId: String($0.space),
                     bundleId: getBundleIdentifier(for: $0.pid) ?? "",
