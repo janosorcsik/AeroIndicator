@@ -33,8 +33,8 @@ Add to your `.yabairc`
 yabai -m signal --add event=window_focused action='aeroIndicator focus-change'
 yabai -m signal --add event=window_destroyed action='aeroIndicator focus-change'
 yabai -m signal --add event=space_changed action='aeroIndicator workspace-change $YABAI_SPACE_INDEX'
-yabai -m signal --add event=space_created action='aeroIndicator workspace-createed-or-destroyed'
-yabai -m signal --add event=space_destroyed action='aeroIndicator workspace-createed-or-destroyed'
+yabai -m signal --add event=space_created action='aeroIndicator workspace-created-or-destroyed'
+yabai -m signal --add event=space_destroyed action='aeroIndicator workspace-created-or-destroyed'
 ```
 
 ## Commands
